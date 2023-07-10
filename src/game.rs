@@ -46,13 +46,13 @@ impl Game {
         self.movement_timer += get_frame_time();
 
         if self.best_snake.is_none() {
-            println!("Generation: {}", self.population.generation);
             loop {
                 let i = self.population.train();
                 if i == 0 {
                     self.population.evaluate();
                     self.population.sort();
                     let best_snake = self.population.best();
+                    println!("generation: {}", self.population.generation);
                     println!("best fitness: {}", best_snake.fitness);
                     self.best_snake = Some(best_snake);
                     break;

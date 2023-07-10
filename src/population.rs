@@ -1,7 +1,7 @@
 use rand::Rng;
 
 use crate::snake::Snake;
-
+use rayon::prelude::*;
 
 #[derive(Debug)]
 pub struct Population {
@@ -20,20 +20,23 @@ impl Population {
             size,
             snakes,
             generation: 1,
-            transfer_count: 50,
-            mutation_odds: 0.05,
+            transfer_count: 10,
+            mutation_odds: 0.1,
             crossover: 100,
         }
     }
 
     pub fn train(&mut self) -> usize {
-        let mut alive = 0;
-        for snake in self.snakes.iter_mut() {
-            if !snake.is_dead {
-                snake.update();
-                alive += 1
-            }
-        }
+        let alive = self.snakes
+            .par_iter_mut()
+            .map(|s| {
+                if !s.is_dead {
+                    s.update();
+                    return 1;
+                }
+                0
+            })
+            .sum();
         alive
     }
 

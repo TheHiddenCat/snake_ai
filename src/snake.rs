@@ -64,7 +64,7 @@ impl Default for Snake {
             tail: (1..=2).map(|i| Tail::new(x, y + i)).collect(),
             should_grow: false,
             score: 0,
-            steps_left: 300,
+            steps_left: 100,
             is_dead: false,
             lifetime: 0,
             vision: vec![],

@@ -1,4 +1,5 @@
 use rand::Rng;
+use rand_distr::Normal;
 use ndarray::Array2;
 
 // directions = 8
@@ -75,28 +76,29 @@ impl Brain {
 
     pub fn mutate(&mut self, mutation_rate: f32) {
         let mut rng = rand::thread_rng();
+        let normal = Normal::new(0.0, 0.5).unwrap();
 
         for weight in self.input_weights.iter_mut() {
             if rng.gen::<f32>() < mutation_rate {
-                *weight += rng.gen_range(-1.0..1.0);
+                *weight += rng.sample(normal);
             }
         }
 
         for weight in self.hidden_weights.iter_mut() {
             if rng.gen::<f32>() < mutation_rate {
-                *weight += rng.gen_range(-1.0..1.0);
+                *weight += rng.sample(normal);
             }
         }
 
         for bias in self.input_biases.iter_mut() {
             if rng.gen::<f32>() < mutation_rate {
-                *bias += rng.gen_range(-1.0..1.0);
+                *bias += rng.sample(normal);
             }
         }
 
         for bias in self.hidden_biases.iter_mut() {
             if rng.gen::<f32>() < mutation_rate {
-                *bias += rng.gen_range(-1.0..1.0);
+                *bias += rng.sample(normal);
             }
         }
     }
