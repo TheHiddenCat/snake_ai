@@ -564,7 +564,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "snake-rs"
+name = "snake-ai"
 version = "0.1.0"
 dependencies = [
  "macroquad",
