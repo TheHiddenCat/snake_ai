@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use macroquad::{prelude::{GREEN, DARKGREEN, YELLOW}, shapes::draw_rectangle, rand::gen_range};
+use macroquad::{prelude::{GREEN, DARKGREEN}, shapes::draw_rectangle, rand::gen_range};
 use ndarray::Array2;
 
 use crate::{settings::{CELL_SIZE, CELL_AMOUNT_X, CELL_AMOUNT_Y}, direction::Direction, apple::Apple, brain::Brain};
