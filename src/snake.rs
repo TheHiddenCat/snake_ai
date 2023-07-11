@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use macroquad::{prelude::{GREEN, DARKGREEN}, shapes::draw_rectangle, rand::gen_range};
+use macroquad::{prelude::{GREEN, DARKGREEN, YELLOW}, shapes::draw_rectangle, rand::gen_range};
 use ndarray::Array2;
 
 use crate::{settings::{CELL_SIZE, CELL_AMOUNT_X, CELL_AMOUNT_Y}, direction::Direction, apple::Apple, brain::Brain};
@@ -35,12 +35,12 @@ pub struct Tail {
 pub struct Ray {
     apple: f32,
     body: f32,
-    distance: f32,
+    wall: f32,
 }
 
 impl From<Ray> for [f32; 3] {
     fn from(value: Ray) -> Self {
-        [value.apple, value.body, value.distance]
+        [value.apple, value.body, value.wall]
     }
 }
 
@@ -252,7 +252,7 @@ impl Snake {
             let ray = self.cast_ray(direction);
             vision.push(ray.apple);
             vision.push(ray.body);
-            vision.push(ray.distance);
+            vision.push(ray.wall);
         }
 
         self.vision = vision;
@@ -262,21 +262,29 @@ impl Snake {
         let mut ray = Ray::default();
         let mut position = (self.x + direction.0, self.y + direction.1);
         let mut distance = 1.0;
+        let mut found_apple = false;
+        let mut found_body = false;
 
-        while !self.wall_collision(position) {
-            if self.collision(position, self.apple.position()) {
-                ray.apple = 1.0
+        loop {
+            if self.collision(position, self.apple.position()) && !found_apple {
+                ray.apple = 1.0;
+                found_apple = true;
             }
-            if self.body_collision(position) {
-                ray.body = 1.0
+            if self.body_collision(position) && !found_body {
+                ray.body = 1.0 / distance;
+                found_body = true;
+            }
+            if self.wall_collision(position) {
+                ray.wall = 1.0 / distance;
+                break;
             }
 
             position.0 += direction.0;
             position.1 += direction.1;
+
             distance += 1.0;
         }
 
-        ray.distance = 1.0 / distance;
         ray
     }
 
