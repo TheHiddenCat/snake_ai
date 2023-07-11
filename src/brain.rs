@@ -34,9 +34,9 @@ impl Brain {
 
     pub fn forward(&self, input: Array2<f32>) -> Array2<f32> {
         let input_layer_output = self.input_weights.dot(&input) + &self.input_biases;
-        let hidden_layer_output = self.sigmoid(input_layer_output);
+        let hidden_layer_output = self.relu(&input_layer_output);
         let output_layer_output = self.hidden_weights.dot(&hidden_layer_output) + &self.hidden_biases;
-        self.sigmoid(output_layer_output)
+        self.relu(&output_layer_output)
     }
 
     pub fn crossover(&self, other: &Brain) -> Brain {
@@ -103,7 +103,17 @@ impl Brain {
         }
     }
 
+    #[allow(unused)]
     pub fn sigmoid(&self, x: Array2<f32>) -> Array2<f32> {
         1f32 / (1f32 + (-x).mapv(|x| x.exp()))
     }
+    
+    pub fn relu(&self, input: &Array2<f32>) -> Array2<f32> {
+        input.mapv(|x| if x > 0.0 {
+            x
+        } else {
+            0.0
+        })
+    }
+
 }
